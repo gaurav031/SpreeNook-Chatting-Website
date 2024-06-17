@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import AppLayout from "../components/Layout/AppLayout"
+import {AppLayout} from "../components/Layout/AppLayout.jsx"
 import { IconButton, Stack } from '@mui/material';
 import { greyColor, orange } from '../constants/color';
 import { AttachFile as AttachFileIcon, Send as SendIcon } from '@mui/icons-material';
