@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import {AppLayout} from "../components/Layout/AppLayout.jsx"
+import React, { useRef } from 'react';
+import AppLayout from "../components/Layout/AppLayout.jsx";  // Default import
 import { IconButton, Stack } from '@mui/material';
 import { greyColor, orange } from '../constants/color';
 import { AttachFile as AttachFileIcon, Send as SendIcon } from '@mui/icons-material';
@@ -13,7 +13,7 @@ const user = {
   name: "gaurav"
 }
 
-const chat = () => {
+const Chat = () => {  // Use PascalCase for component names
   const containerRef = useRef(null);
   return (
     <>
@@ -29,16 +29,9 @@ const chat = () => {
           overflowY: "auto"
         }}
       >
-
-
-        {
-          SampleMessage.map((i) => (
-            <MessageComponent key={i._id} message={i} user={user} />
-          ))
-        }
-
-
-
+        {SampleMessage.map((i) => (
+          <MessageComponent key={i._id} message={i} user={user} />
+        ))}
       </Stack>
 
       <form
@@ -46,12 +39,11 @@ const chat = () => {
           height: "10%",
         }}
       >
-
         <Stack
           direction={"row"}
           height={"100%"}
           padding={"1rem"}
-          alignItems={"centre"}
+          alignItems={"center"}
           position={"relative"}
         >
           <IconButton
@@ -82,13 +74,10 @@ const chat = () => {
             <SendIcon />
           </IconButton>
         </Stack>
-
-
       </form>
       <FileMenu />
     </>
   )
 }
 
-export default AppLayout()(chat);
-
+export default AppLayout()(Chat);  // Correct default usage

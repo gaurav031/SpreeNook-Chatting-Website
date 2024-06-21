@@ -1,57 +1,65 @@
-import React, { useState } from 'react'
-import { Grid, IconButton, Box, Tooltip, Drawer } from "@mui/material"
-import { KeyboardBackspace as KeyboardBackspaceIcon, Menu as MenuIcon } from '@mui/icons-material'
+import React, { memo, useState } from 'react';
+import { Grid, IconButton, Box, Tooltip, Drawer, Stack, Typography } from "@mui/material";
+import { KeyboardBackspace as KeyboardBackspaceIcon, Menu as MenuIcon } from '@mui/icons-material';
 import { matBlack } from "../constants/color";
 import { useNavigate } from "react-router-dom";
+import { Link } from "../components/styles/StyledComponents";
+import AvatarCard from "../components/shared/AvatarCard";
+import { SampleChats } from "../constants/sampleData";
 
 const Groups = () => {
-
+  const chatId = 'adfrfj';
   const navigate = useNavigate();
-  const [isMobileMenuOpen, setisMobileMenuOpen ] = useState(false);
+  const [isMobileMenuOpen, setisMobileMenuOpen] = useState(false);
+
   const navigateBack = () => {
     navigate("/");
   }
-  
-  const handleMobile =() =>{
+
+  const handleMobile = () => {
     setisMobileMenuOpen((prev) => !prev);
   };
   const handleMobileClose = () => setisMobileMenuOpen(false);
-  const IconBtns = <>
 
-    <Box sx={{
-      display: {
-        xs: "block",
-        sm: "none",
-        position: "fixed",
-        right: "1rem",
-        top: "1rem",
-      },
-    }}>
-      <Tooltip title="Menu">
-        <IconButton onClick={handleMobile} >
-          <MenuIcon />
-        </IconButton>
-      </Tooltip>
-
-    </Box>
-    <Tooltip title="back">
-      <IconButton
+  const IconBtns = (
+    <>
+      <Box
         sx={{
-          position: "absolute",
-          top: "2rem",
-          left: "2rem",
-          bgcolor: matBlack,
-          color: "white",
-          ":hover": {
-            bgcolor: "rgba(0,0,0,0.6)",
+          display: {
+            xs: "block",
+            sm: "none",
+            position: "fixed",
+            right: "1rem",
+            top: "1rem",
           },
         }}
-        onClick={navigateBack}
       >
-        <KeyboardBackspaceIcon />
-      </IconButton>
-    </Tooltip>
-  </>;
+        <Tooltip title="Menu">
+          <IconButton onClick={handleMobile}>
+            <MenuIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+      <Tooltip title="back">
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: "2rem",
+            left: "2rem",
+            bgcolor: matBlack,
+            color: "white",
+            ":hover": {
+              bgcolor: "rgba(0,0,0,0.6)",
+            },
+          }}
+          onClick={navigateBack}
+        >
+          <KeyboardBackspaceIcon />
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+
   return (
     <Grid container height={"100vh"}>
       <Grid
@@ -65,11 +73,10 @@ const Groups = () => {
         sm={4}
         bgcolor={"bisque"}
       >
-     <GroupList />
+        <GroupList myGroups={SampleChats} chatId={chatId} />
       </Grid>
-
-
-      <Grid item
+      <Grid
+        item
         xs={12}
         sm={8}
         sx={{
@@ -80,24 +87,53 @@ const Groups = () => {
           padding: "1rem 3rem",
         }}
       >
-
-        {
-          IconBtns
-        }
-
+        {IconBtns}
       </Grid>
-      <Drawer sx={{
-        display:{
-          xs: "block",
-          sm: "none",
-        },
-      }} open={isMobileMenuOpen} onClose={handleMobileClose}>
-      <GroupList  w={"50vw"} />
+      <Drawer
+        sx={{
+          display: {
+            xs: "block",
+            sm: "none",
+          },
+        }}
+        open={isMobileMenuOpen}
+        onClose={handleMobileClose}
+      >
+        <GroupList w={"50vw"} myGroups={SampleChats} chatId={chatId} />
       </Drawer>
     </Grid>
-  )
-}
+  );
+};
 
-const GroupList =() => {};
+const GroupList = ({ w = "100%", myGroups = [], chatId }) => {
+  return (
+    <Stack width={w}>
+      {myGroups.length > 0 ? (
+        myGroups.map((group) => (
+          <GroupListItem group={group} chatId={chatId} key={group._id} />
+        ))
+      ) : (
+        <Typography textAlign={"center"} padding={"1rem"}>No Group</Typography>
+      )}
+    </Stack>
+  );
+};
 
-export default Groups
+const GroupListItem = memo(({ group, chatId }) => {
+  const { name, avatar, _id } = group;
+  return (
+    <Link
+      to={`?group=${_id}`}
+      onClick={(e) => {
+        if (chatId === _id) e.preventDefault();
+      }}
+    >
+      <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
+        <AvatarCard avatar={avatar} />
+        <Typography>{name}</Typography>
+      </Stack>
+    </Link>
+  );
+});
+
+export default Groups;
